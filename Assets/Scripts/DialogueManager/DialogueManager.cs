@@ -4,7 +4,6 @@ using UnityEngine;
 using Ink.Runtime;
 using TMPro;
 using UnityEngine.EventSystems;
-using Ink.UnityIntegration;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -12,21 +11,18 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private GameObject continueIcon;
     [SerializeField] private TextMeshProUGUI dialogueText;
-    
-    [Header("Globals Ink File")]
-    [SerializeField] private InkFile globalsInkFile;
+
+    [Header("Load Globals JSON")]
+    [SerializeField] private TextAsset loadGlobalJSON;
+
     [Header("Choices UI")]
     [SerializeField] private GameObject[] choices;
     private TextMeshProUGUI[] choicesText;
-
     private Story currentStory;
     public bool dialogueIsPlaying { get; private set; }
-
     private bool canContinuToNextLine = false;
     private Coroutine displayLineCoroutine;
-
     private static DialogueManager instance;
-
     private DialogueVariables dialogueVariables;
 
     private void Awake()
@@ -37,7 +33,7 @@ public class DialogueManager : MonoBehaviour
         }
         instance = this;
 
-        dialogueVariables = new DialogueVariables(globalsInkFile.filePath);
+        dialogueVariables = new DialogueVariables(loadGlobalJSON);
     }
     public static DialogueManager GetInstance()
     {
@@ -196,5 +192,15 @@ public class DialogueManager : MonoBehaviour
             Debug.LogWarning("Ink Variable was found to be null: " + variableName);
         }
         return variableValue;
+    }
+
+    //This method will get called anytime the application exits.
+    //Depending on your game, you may want to save variable state in other places
+    public void OnApplicationQuit()
+    {
+        if (dialogueVariables != null)
+        {
+            dialogueVariables.SaveVariables();
+        }
     }
 }

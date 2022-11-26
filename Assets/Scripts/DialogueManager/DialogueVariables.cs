@@ -1,20 +1,22 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
-using System.IO;
 
 public class DialogueVariables
 {
-    public Dictionary<string, Ink.Runtime.Object> variables {get; private set;}
-
-    public DialogueVariables(string globalsFilePath)
+    public Dictionary<string, Ink.Runtime.Object> variables { get; private set; }
+    private Story globalVariablesStory;
+    private const string SaveVariablesKey = "INK_VARIABLES";
+    public DialogueVariables(TextAsset loadGlobalsJSON)
     {
-        //Compile Story
-        string inkFileContents = File.ReadAllText(globalsFilePath);
-        Ink.Compiler compiler = new Ink.Compiler(inkFileContents);
-        Story globalVariablesStory = compiler.Compile();
-
+        //create the story
+        globalVariablesStory = new Story(loadGlobalsJSON.text);
+        //if we have saved data, load it
+        if (PlayerPrefs.HasKey(SaveVariablesKey))
+        {
+            string jsonState = PlayerPrefs.GetString(SaveVariablesKey);
+            globalVariablesStory.state.LoadJson(jsonState);
+        }
         //initialize the dictionary
         variables = new Dictionary<string, Ink.Runtime.Object>();
         foreach (string name in globalVariablesStory.variablesState)
@@ -22,6 +24,18 @@ public class DialogueVariables
             Ink.Runtime.Object value = globalVariablesStory.variablesState.GetVariableWithName(name);
             variables.Add(name, value);
             Debug.Log("Initialized global dialogue variable:" + name + " = " + value);
+        }
+    }
+
+    public void SaveVariables()
+    {
+        if (globalVariablesStory != null)
+        {
+            //Load the current state of all  of your variables to the globals story
+            VariablesToStory(globalVariablesStory);
+            //NOTE: eventually, you'd want to replace this with an actual save/load method
+            // rather than using PlayerPrefs
+            PlayerPrefs.SetString(SaveVariablesKey, globalVariablesStory.state.ToJson());
         }
     }
     public void StartListening(Story story)
@@ -54,3 +68,4 @@ public class DialogueVariables
         }
     }
 }
+;
