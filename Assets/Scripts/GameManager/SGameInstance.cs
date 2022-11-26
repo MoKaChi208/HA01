@@ -8,7 +8,7 @@ using Pixelplacement;
 public class SGameInstance : Singleton<SGameInstance>
 {
     public SPlayer player;
-    private Dictionary<int, SMonster> monsterDictionary;
+    private Dictionary<int, SAlien> alienDictionary;
     public NeighbourPositions neighbourPositions;
     public GameEvent gameEvent;
     public Camera mainCam;
@@ -17,25 +17,31 @@ public class SGameInstance : Singleton<SGameInstance>
     private void Awake()
     {
         MonoUtility.SetTimeScale(1, this);
-        monsterDictionary = new Dictionary<int, SMonster>();
         gameEvent = new GameEvent();
         neighbourPositions = new NeighbourPositions(Camera.main);
     }
 
-    public void AddMonster(SMonster monster)
+    public void AddMonster(SAlien monster)
     {
-        if (!monsterDictionary.ContainsKey(monster.transform.GetInstanceID()))
-            monsterDictionary.Add(monster.transform.GetInstanceID(), monster);
+        if (!alienDictionary.ContainsKey(monster.transform.GetInstanceID()))
+            alienDictionary.Add(monster.transform.GetInstanceID(), monster);
     }
 
-    public SMonster GetMonsterReference(int transformInstanceID)
+    public SAlien GetMonsterReference(int transformInstanceID)
     {
-        if (monsterDictionary.ContainsKey(transformInstanceID))
-            return monsterDictionary[transformInstanceID];
+        if (alienDictionary.ContainsKey(transformInstanceID))
+            return alienDictionary[transformInstanceID];
 
         return null;
     }
 
+}
+[System.Serializable]
+public class Cheat
+{
+    public bool enableSkillCheat;
+    public bool dailyRewardCheat;
+    public int loginDays;
 }
 
 

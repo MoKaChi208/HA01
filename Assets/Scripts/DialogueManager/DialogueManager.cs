@@ -3,15 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
 using TMPro;
+using UnityEngine.EventSystems;
+using Ink.UnityIntegration;
 
 public class DialogueManager : MonoBehaviour
 {
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialoguePanel;
-    [SerializeField] private TextMeshPro dialogueText;
+    [SerializeField] private GameObject continueIcon;
+    [SerializeField] private TextMeshProUGUI dialogueText;
+    
+    [Header("Globals Ink File")]
+    [SerializeField] private InkFile globalsInkFile;
+    [Header("Choices UI")]
+    [SerializeField] private GameObject[] choices;
+    private TextMeshProUGUI[] choicesText;
+
     private Story currentStory;
     public bool dialogueIsPlaying { get; private set; }
+
+    private bool canContinuToNextLine = false;
+    private Coroutine displayLineCoroutine;
+
     private static DialogueManager instance;
+
+    private DialogueVariables dialogueVariables;
 
     private void Awake()
     {
@@ -20,30 +36,35 @@ public class DialogueManager : MonoBehaviour
             Debug.Log("Found more than one Dialogue Manager in the scene");
         }
         instance = this;
+
+        dialogueVariables = new DialogueVariables(globalsInkFile.filePath);
     }
     public static DialogueManager GetInstance()
     {
         return instance;
     }
-    /// <summary>
-    /// Start is called on the frame when a script is enabled just before
-    /// any of the Update methods is called the first time.
-    /// </summary>
     void Start()
     {
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
+
+        //get all choices text
+        choicesText = new TextMeshProUGUI[choices.Length];
+        int index = 0;
+        foreach (GameObject choice in choices)
+        {
+            choicesText[index] = choice.GetComponentInChildren<TextMeshProUGUI>();
+            index++;
+        }
     }
-    /// <summary>
-    /// Update is called every frame, if the MonoBehaviour is enabled.
-    /// </summary>
     void Update()
     {
         if (!dialogueIsPlaying)
         {
             return;
         }
-        if (Input.GetKeyDown(KeyCode.F))
+        if (canContinuToNextLine && currentStory.currentChoices.Count == 0
+                && Input.GetKeyDown(KeyCode.Space))
         {
             ContinueStory();
         }
@@ -54,11 +75,14 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
+        dialogueVariables.StartListening(currentStory);
+
         ContinueStory();
     }
-    private void ExitDialogueMode()
+    private IEnumerator ExitDialogueMode()
     {
-
+        yield return new WaitForSeconds(0f);
+        dialogueVariables.StopListening(currentStory);
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
@@ -67,11 +91,110 @@ public class DialogueManager : MonoBehaviour
     {
         if (currentStory.canContinue)
         {
-            dialogueText.text = currentStory.Continue();
+            if (displayLineCoroutine != null)
+            {
+                StopCoroutine(displayLineCoroutine);
+            }
+            displayLineCoroutine =
+                StartCoroutine(DisplayLine(currentStory.Continue()));
         }
         else
         {
-            ExitDialogueMode();
+            StartCoroutine(ExitDialogueMode());
         }
+    }
+
+    private IEnumerator DisplayLine(string line)
+    {
+        //empty the dialogue text
+        dialogueText.text = "";
+        //Hide item while text typing
+        continueIcon.SetActive(false);
+        HideChoices();
+        canContinuToNextLine = false;
+        bool isAddingRichTextTag = false;
+        //display each letter one at the time
+        foreach (char letter in line.ToCharArray())
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                dialogueText.text = line;
+                break;
+            }
+            //check for rich text tag
+            if (letter == '<' || isAddingRichTextTag)
+            {
+                isAddingRichTextTag = true;
+                dialogueText.text += letter;
+                if (letter == '>')
+                {
+                    isAddingRichTextTag = false;
+                }
+            }
+            else
+            {
+                dialogueText.text += letter;
+                yield return new WaitForSeconds(0.04f);
+            }
+
+        }
+
+        continueIcon.SetActive(true);
+
+        DisplayChoices();
+        canContinuToNextLine = true;
+    }
+
+    private void DisplayChoices()
+    {
+        List<Choice> currentChoices = currentStory.currentChoices;
+        //defensive check UI support number of choices 
+        if (currentChoices.Count > choices.Length)
+        {
+            Debug.LogError("More choices were given than the UI can support. " +
+            "Number of choices given: "
+            + currentChoices.Count);
+        }
+
+        int index = 0;
+        //enable and initialize the choices up to the amount of choices
+        foreach (Choice choice in currentChoices)
+        {
+            choices[index].gameObject.SetActive(true);
+            choicesText[index].text = choice.text;
+            index++;
+        }
+        //go through the remaining choives and hidden 
+        for (int i = index; i < choices.Length; i++)
+        {
+            choices[i].gameObject.SetActive(false);
+        }
+    }
+    private void HideChoices()
+    {
+        foreach (GameObject choiceButton in choices)
+        {
+            choiceButton.SetActive(false);
+        }
+    }
+
+    public void MakeChoice(int choiceIndex)
+    {
+        if (canContinuToNextLine)
+        {
+            currentStory.ChooseChoiceIndex(choiceIndex);
+            ContinueStory();
+        }
+    }
+
+    public Ink.Runtime.Object GetVariableState(string variableName)
+    {
+        Ink.Runtime.Object variableValue = null;
+        dialogueVariables.variables.TryGetValue(variableName, out variableValue);
+        if (variableValue == null)
+        {
+            Debug.LogWarning("Ink Variable was found to be null: " + variableName);
+        }
+        return variableValue;
     }
 }

@@ -98,8 +98,8 @@ public class PlayerData
     public PlayerData()
     {
         name = "Player";
-        speed = 2f;
-        health = 100f;
+        speed = 5f;
+        health = 110f;
     }
 }
 

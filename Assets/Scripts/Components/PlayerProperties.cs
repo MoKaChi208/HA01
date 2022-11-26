@@ -23,7 +23,7 @@ public class PlayerProperties : CharacterProperties
         baseDamage = damage;
         armor += 1;
         maxHealth = DataController.gameData.playerData.health;
-        speed = DataController.gameData.playerData.speed;
+        speed = DataFactory.GetSpeedPlayer(1);
     }
 
     public void UpdateAndCalculateTalentData()

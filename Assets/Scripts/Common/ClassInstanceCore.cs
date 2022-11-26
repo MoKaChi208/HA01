@@ -7,7 +7,7 @@ public class ClassInstanceCore
 {
     public SDataController DataController => SDataController.Instance;
     public SDataFactory DataFactory => SDataFactory.Instance;
-    //public SGameInstance GameInstance => SGameInstance.Instance;
+    public SGameInstance GameInstance => SGameInstance.Instance;
     public SCoroutineController CoroutineController => SCoroutineController.Instance;
 
     public Coroutine StartCoroutine(IEnumerator routine)

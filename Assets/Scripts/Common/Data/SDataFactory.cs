@@ -12,9 +12,9 @@ public enum SkillType
 [System.Serializable]
 public class PlayerConfig
 {
-    public string name;
-    public float health;
-    public float speed;
+    public string[] name;
+    public float[] health;
+    public float[] speed;
     public float[] damageToMonster;
 }
 
@@ -64,4 +64,10 @@ public class SDataFactory : Singleton<SDataFactory>
         return monsterConfig.damageToPlayer[index];
     }
     #endregion
+    public float GetSpeedPlayer(int type)
+    {
+        int index =
+                   Mathf.Clamp(type - 1, 0, monsterConfig.damageToPlayer.Length - 1);
+        return playerConfig.speed[index];
+    }
 }
