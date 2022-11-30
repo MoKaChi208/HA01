@@ -12,22 +12,24 @@ public class SGameInstance : Singleton<SGameInstance>
     public NeighbourPositions neighbourPositions;
     public GameEvent gameEvent;
     public Camera mainCam;
+    public Camera showHeroCam;
     public bool isSavingAvailable = true;
 
     private void Awake()
     {
         MonoUtility.SetTimeScale(1, this);
+        alienDictionary = new Dictionary<int, SAlien>();
         gameEvent = new GameEvent();
         neighbourPositions = new NeighbourPositions(Camera.main);
     }
 
-    public void AddMonster(SAlien monster)
+    public void AddAlien(SAlien alien)
     {
-        if (!alienDictionary.ContainsKey(monster.transform.GetInstanceID()))
-            alienDictionary.Add(monster.transform.GetInstanceID(), monster);
+        if (!alienDictionary.ContainsKey(alien.transform.GetInstanceID()))
+            alienDictionary.Add(alien.transform.GetInstanceID(), alien);
     }
 
-    public SAlien GetMonsterReference(int transformInstanceID)
+    public SAlien GetAlienReference(int transformInstanceID)
     {
         if (alienDictionary.ContainsKey(transformInstanceID))
             return alienDictionary[transformInstanceID];

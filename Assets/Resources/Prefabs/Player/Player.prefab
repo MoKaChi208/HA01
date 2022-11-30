@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7756467715630379822}
   - component: {fileID: 7756467715630379823}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,8 +68,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -915129217
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: -4846947989278686816, guid: f56b5f66cfc25c048b05894feec8f5dd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 7756467716736926182}
   - component: {fileID: 6174017386137199471}
   - component: {fileID: 5632750134615106275}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -160,7 +160,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.4, z: 0}
 --- !u!1 &8318909380369008521
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,8 +170,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7052947792745199260}
-  m_Layer: 0
-  m_Name: TargetSensor
+  - component: {fileID: 574617912443958833}
+  m_Layer: 7
+  m_Name: AlienSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -191,3 +192,19 @@ Transform:
   m_Father: {fileID: 7756467716736926168}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &574617912443958833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8318909380369008521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aefb246492fbb54f9300a978719079c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  closestAliens: {fileID: 0}
+  inRangeAliens: []
+  closestDistance: 0
+  amount: 0
