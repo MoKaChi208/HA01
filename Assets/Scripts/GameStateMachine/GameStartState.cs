@@ -36,11 +36,11 @@ public class GameStartState : State, IMessageHandle
     private void SetupScene()
     {
         CinemachineConfiner cinemachineConfiner = GameObject.Find("CM vcam1").GetComponent<CinemachineConfiner>();
-        CinemachineVirtualCamera vCam = cinemachineConfiner.GetComponent<CinemachineVirtualCamera>();
+         CinemachineVirtualCamera vCam = cinemachineConfiner.GetComponent<CinemachineVirtualCamera>();
     }
     private void OnDestroy()
     {
-              MessageManager.RemoveSubcriber(TeeMessageType.OnPlayButtonClicked, this);
+        MessageManager.RemoveSubcriber(TeeMessageType.OnPlayButtonClicked, this);
         MessageManager.RemoveSubcriber(TeeMessageType.OnResumeButtonClicked, this);
     }
 }

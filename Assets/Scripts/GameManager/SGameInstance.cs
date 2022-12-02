@@ -12,7 +12,6 @@ public class SGameInstance : Singleton<SGameInstance>
     public NeighbourPositions neighbourPositions;
     public GameEvent gameEvent;
     public Camera mainCam;
-    public Camera showHeroCam;
     public bool isSavingAvailable = true;
 
     private void Awake()

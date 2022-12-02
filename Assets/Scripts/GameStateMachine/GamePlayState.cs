@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class GamePlayState : MonoBehaviour
 {
+    public GameObject timeLine;
     // Start is called before the first frame update
     void Start()
     {
-        
+        timeLine.SetActive(true);
     }
 
     // Update is called once per frame
