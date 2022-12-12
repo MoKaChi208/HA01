@@ -4,16 +4,25 @@ using UnityEngine;
 
 public class GamePlayState : MonoBehaviourCore
 {
-    public GameObject timeLine;
-    // Start is called before the first frame update
-    void Start()
+    private SGamePlayUI gamePlayUI;
+    public TimeLineManager timeLineManager;
+    public SPlayer player;
+    public const string UI_PATH = "Prefabs/UI/";
+    public const string TIMELINE_PATH = "Prefabs/TimeLine/";
+    private GameStateData gameStateData;
+    private void Awake()
     {
-        timeLine.SetActive(true);
+        gamePlayUI = Resources.Load<SGamePlayUI>(UI_PATH + "GamePlay");
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+        gamePlayUI = Instantiate(gamePlayUI);
+        timeLineManager.gameObject.SetActive(true);
+        //if (GameInstance.isTutorialEnable) gamePlayUI.DisplayTutorialText();
+
+        player.movementComponent.CreateJoystick(gamePlayUI.joystickZone);
+
+
     }
 }

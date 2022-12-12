@@ -11,7 +11,7 @@ public class DialogueTrigger : MonoBehaviourCore
 
     private void Awake()
     {
-//        DialogueManager.GetInstance().playerInRange = false;
+        //        DialogueManager.GetInstance().playerInRange = false;
         visualCue.SetActive(false);
     }
     private void Update()
@@ -33,6 +33,7 @@ public class DialogueTrigger : MonoBehaviourCore
     {
         if (other.gameObject.tag == "Player")
         {
+            DialogueManager.GetInstance().inkJSON = inkJSON;
             DialogueManager.GetInstance().playerInRange = true;
         }
     }
@@ -40,6 +41,7 @@ public class DialogueTrigger : MonoBehaviourCore
     {
         if (other.gameObject.tag == "Player")
         {
+            DialogueManager.GetInstance().inkJSON = null;
             DialogueManager.GetInstance().playerInRange = false;
         }
     }

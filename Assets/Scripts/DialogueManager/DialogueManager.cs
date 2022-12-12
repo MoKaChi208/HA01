@@ -143,7 +143,6 @@ public class DialogueManager : MonoBehaviour
                 dialogueText.text += letter;
                 yield return new WaitForSeconds(0.04f);
             }
-
         }
 
         continueIcon.SetActive(true);

@@ -17,8 +17,10 @@ public class SPlayerMovementController : MonoBehaviour
     private bool isRunning;
     public bool isClickGoTo;
     public Vector3 targetGoTo;
-    private void Reset()
+    public const string JOYSTICK_PATH = "Prefabs/Joystick/";
+    private void Start()
     {
+        floatingJoystick = Resources.Load<FixedJoystick>(JOYSTICK_PATH + "Fixed Joystick");
         animator = GetComponentInChildren<Animator>();
     }
 

@@ -14,7 +14,7 @@ public class TimeLineManager : MonoBehaviourCore
     public GameObject player;
     public GameObject startPointCamera;
     public CinemachineVirtualCamera cinemachineVirtual;
-    public GameObject joystick;
+    //public GameObject joystick;
 
 
 
@@ -45,6 +45,6 @@ public class TimeLineManager : MonoBehaviourCore
     private IEnumerator PlayTimelineRoutine()
     {
         yield return new WaitForSeconds((float)director.duration);
-        joystick.SetActive(true);
+      //  joystick.SetActive(true);
     }
 }
