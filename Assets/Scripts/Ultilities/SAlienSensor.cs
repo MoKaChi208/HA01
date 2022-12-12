@@ -25,10 +25,10 @@ public class SAlienSensor : MonoBehaviourCore
 
     private void FindAliensInRange()
     {
-        amount = Physics.OverlapSphereNonAlloc(transform.position, 10, inRangeAliens,1<<6);
+        amount = Physics.OverlapSphereNonAlloc(transform.position, 9, inRangeAliens, 1 << 6);
     }
 
-    private void PickNearestAlien()
+    public void PickNearestAlien()
     {
         for (int i = 0; i < amount; i++)
         {

@@ -2,18 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GamePlayState : MonoBehaviourCore
+public class SPlayerSkill : MonoBehaviour
 {
-    public GameObject timeLine;
+    public GameObject directionSkill1;
+    public GameObject directionSkill2;
+    public GameObject directionSkill3;
     // Start is called before the first frame update
     void Start()
     {
-        timeLine.SetActive(true);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

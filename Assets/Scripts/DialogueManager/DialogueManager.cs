@@ -14,16 +14,20 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Load Globals JSON")]
     [SerializeField] private TextAsset loadGlobalJSON;
+    [Header("Ink JSON")]
+    [SerializeField] public TextAsset inkJSON;
 
     [Header("Choices UI")]
     [SerializeField] private GameObject[] choices;
     private TextMeshProUGUI[] choicesText;
-    private Story currentStory;
+    public Story currentStory;
     public bool dialogueIsPlaying { get; private set; }
-    private bool canContinuToNextLine = false;
-    private Coroutine displayLineCoroutine;
+    public bool canContinuToNextLine = false;
+    public Coroutine displayLineCoroutine;
     private static DialogueManager instance;
     private DialogueVariables dialogueVariables;
+    public bool playerInRange;
+
 
     private void Awake()
     {
@@ -65,6 +69,13 @@ public class DialogueManager : MonoBehaviour
             ContinueStory();
         }
     }
+    public void OnClickContinueStory()
+    {
+        if (canContinuToNextLine && currentStory.currentChoices.Count == 0)
+        {
+            ContinueStory();
+        }
+    }
     public void EnterDialogueMode(TextAsset inkJSON)
     {
         currentStory = new Story(inkJSON.text);
@@ -83,7 +94,7 @@ public class DialogueManager : MonoBehaviour
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
     }
-    private void ContinueStory()
+    public void ContinueStory()
     {
         if (currentStory.canContinue)
         {

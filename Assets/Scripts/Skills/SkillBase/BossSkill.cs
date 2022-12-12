@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GamePlayState : MonoBehaviourCore
+public class BossSkill : MonoBehaviour
 {
-    public GameObject timeLine;
     // Start is called before the first frame update
     void Start()
     {
-        timeLine.SetActive(true);
+        
     }
 
     // Update is called once per frame

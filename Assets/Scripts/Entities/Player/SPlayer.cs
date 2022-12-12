@@ -10,30 +10,32 @@ public class SPlayer : MonoBehaviourCore
     public Rigidbody playerRigid;
     public SFollower follower;
     public SAlienSensor alienSensor;
+    public SDialogueSensor dialogueSensor;
 
     private void Reset()
     {
         movementComponent = GetComponent<SPlayerMovementController>();
-        follower = Resources.Load<SFollower>("Follower");
+        // follower = Resources.Load<SFollower>("Follower");
         alienSensor = GetComponentInChildren<SAlienSensor>();
         playerRigid = GetComponent<Rigidbody>();
+        dialogueSensor = GetComponentInChildren<SDialogueSensor>();
     }
 
     private void Awake()
     {
-       // movementComponent.playerProperties = playerProperties;
+        movementComponent.playerProperties = playerProperties;
     }
 
     private void Start()
     {
-        follower = Instantiate(follower, transform.position, Quaternion.identity);
-        follower.target = transform;
         playerProperties.CalculateProperties();
     }
-
-    // private void EnableBehaviours(bool isEnable)
-    // {
-    //     movementComponent.floatingJoystick.gameObject.SetActive(isEnable);
-    //     movementComponent.enabled = isEnable;
-    // }
+    private void Update()
+    {
+        if (alienSensor.closestDistance <= 2 || alienSensor.closestAliens == null || alienSensor.closestDistance >= 40f)
+        {
+            movementComponent.isClickGoTo = false;
+            movementComponent.targetGoTo = Vector3.zero;
+        }
+    }
 }
