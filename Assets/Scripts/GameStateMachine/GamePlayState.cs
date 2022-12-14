@@ -22,6 +22,7 @@ public class GamePlayState : MonoBehaviourCore
         //if (GameInstance.isTutorialEnable) gamePlayUI.DisplayTutorialText();
 
         player.movementComponent.CreateJoystick(gamePlayUI.joystickZone);
+        player.skillComponent.CreatePanel(gamePlayUI.skillZone);
 
 
     }

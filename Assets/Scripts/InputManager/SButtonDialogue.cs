@@ -11,7 +11,8 @@ public class SButtonDialogue : Button
         base.OnPointerDown(eventData);
         if (DialogueManager.GetInstance().playerInRange && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
-            DialogueManager.GetInstance().EnterDialogueMode(DialogueManager.GetInstance().inkJSON);
+            //DialogueManager.GetInstance().EnterDialogueMode(DialogueManager.GetInstance().inkJSON);
+            SGameInstance.Instance.player.alienSensor.closestAliens.dialogueCharacterPopup.EnterDialogueMode();    
         }
         if (!DialogueManager.GetInstance().dialogueIsPlaying)
         {
@@ -19,7 +20,7 @@ public class SButtonDialogue : Button
         }
         if (DialogueManager.GetInstance().canContinuToNextLine && DialogueManager.GetInstance().currentStory.currentChoices.Count == 0)
         {
-            DialogueManager.GetInstance().ContinueStory();
+                   SGameInstance.Instance.player.alienSensor.closestAliens.dialogueCharacterPopup.ContinueStory(); 
         }
     }
 

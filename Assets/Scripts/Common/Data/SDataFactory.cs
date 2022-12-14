@@ -6,7 +6,10 @@ using UnityEngine;
 [System.Serializable]
 public enum SkillType
 {
-    None = -1
+    FirstSkill = 1,
+    SecondSkill = 2,
+    UltimateSkill = 3
+
 }
 
 [System.Serializable]

@@ -23,6 +23,7 @@ public class AlienProperties : CharacterProperties
 public class SAlien : MonoBehaviourCore
 {
     public AlienProperties alienProperties;
+    public SDialogueCharacterPopup dialogueCharacterPopup;
     // public SDpsAttacker characterDps;
     // public SMovement movement;
     // public SSpritePingPong spritePingPong;

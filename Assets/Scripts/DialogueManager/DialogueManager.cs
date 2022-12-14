@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
 using TMPro;
-using UnityEngine.EventSystems;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -65,13 +64,6 @@ public class DialogueManager : MonoBehaviour
         }
         if (canContinuToNextLine && currentStory.currentChoices.Count == 0
                 && Input.GetKeyDown(KeyCode.Space))
-        {
-            ContinueStory();
-        }
-    }
-    public void OnClickContinueStory()
-    {
-        if (canContinuToNextLine && currentStory.currentChoices.Count == 0)
         {
             ContinueStory();
         }

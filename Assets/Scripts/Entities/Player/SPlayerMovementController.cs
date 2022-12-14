@@ -6,7 +6,6 @@ using UnityEngine.Events;
 
 public class SPlayerMovementController : MonoBehaviour
 {
-    public UnityAction OnMoving;
     public FixedJoystick floatingJoystick;
     public Animator animator;
     [SerializeField] private Vector2 joyStickDir;

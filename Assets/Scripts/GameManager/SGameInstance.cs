@@ -13,8 +13,9 @@ public class SGameInstance : Singleton<SGameInstance>
     public GameEvent gameEvent;
     public Camera mainCam;
     public bool isSavingAvailable = true;
-    public SAlien[] aliens = new SAlien[5];
+    public SAlien[] aliens = new SAlien[7];
     public ButtonAttackController buttonAttackController;
+    public DialogueController dialogueController;
     private void Awake()
     {
         MonoUtility.SetTimeScale(1, this);
@@ -23,6 +24,7 @@ public class SGameInstance : Singleton<SGameInstance>
         neighbourPositions = new NeighbourPositions(Camera.main);
         AddAlien();
         buttonAttackController = new ButtonAttackController();
+        dialogueController = new DialogueController();
     }
 
     public void AddAlien()
@@ -31,8 +33,7 @@ public class SGameInstance : Singleton<SGameInstance>
         // alienDictionary.Add(alien.transform.GetInstanceID(), alien);
         for (int i = 0; i < aliens.Length; i++)
         {
-   
-                alienDictionary.Add(aliens[i].transform.GetInstanceID(), aliens[i]);
+            alienDictionary.Add(aliens[i].transform.GetInstanceID(), aliens[i]);
         }
     }
 

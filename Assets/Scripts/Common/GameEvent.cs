@@ -12,4 +12,8 @@ public class GameEvent
     public UnityAction<Transform> OnGroundPositionChange;
     public UnityAction OnTrialBattleClicked;
     public UnityAction OnResumeBattleClicked;
+    public UnityAction OnSkillClickedDown;
+    public UnityAction OnSkillClickedUp;
+    public UnityAction OnSpawnFirstSkill;
+    public UnityAction OnPlayerUseSkill;
 }
