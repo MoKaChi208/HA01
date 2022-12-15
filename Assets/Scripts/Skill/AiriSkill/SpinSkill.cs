@@ -40,6 +40,9 @@ public class SpinSkill : ActiveSkill
     {
         SpawnBullet(bulletPool, position, rotation);
     }
-
+    public override void UpdateCoolDown()
+    {
+        base.UpdateCoolDown();
+    }
 
 }

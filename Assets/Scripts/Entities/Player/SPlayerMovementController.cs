@@ -16,6 +16,7 @@ public class SPlayerMovementController : MonoBehaviour
     private bool isRunning;
     public bool isClickGoTo;
     public Vector3 targetGoTo;
+    [SerializeField] private Rigidbody rigidbody;
     public const string JOYSTICK_PATH = "Prefabs/Joystick/";
     private void Start()
     {
@@ -122,4 +123,5 @@ public class SPlayerMovementController : MonoBehaviour
         Debug.Log("ConvertVector: " + goToDirection);
         return goToDirection;
     }
+
 }

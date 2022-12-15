@@ -20,6 +20,7 @@ public class ButtonAttackController : ClassInstanceCore
 
         if (target == null || !target.gameObject.activeInHierarchy)
         {
+            //Normal attack
         }
         if (target != null && GameInstance.player.alienSensor.closestDistance <= distanceMaxToMove
                 && GameInstance.player.alienSensor.closestDistance > distanceMinToMove)
@@ -30,13 +31,19 @@ public class ButtonAttackController : ClassInstanceCore
             GameInstance.player.movementComponent.isClickGoTo = true;
             GameInstance.player.movementComponent.targetGoTo = direction;
         }
+        if (target != null && GameInstance.player.alienSensor.closestDistance <= 3f)
+        {
+            //Normal attack
+        }
+
     }
     public void OnClickAttackButton()
     {
         isClick = true;
         GoToClosetTarget();
     }
-    public void OnClickDialogueButton(){
-        
+    public void OnClickDialogueButton()
+    {
+
     }
 }

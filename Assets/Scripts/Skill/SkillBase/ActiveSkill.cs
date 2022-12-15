@@ -8,7 +8,7 @@ public class ActiveSkill : Skill
     public Texture iconSkill { protected set; get; }
     public int number;
     public int baseNumber;
-    public float baseCooldown;
+    public float baseCooldown = 2f;
     public bool skillCoroutineTriggered;
     protected object coolDownDelay;
     private object startgateCooldownDelay;
@@ -37,6 +37,7 @@ public class ActiveSkill : Skill
     {
         coolDownDelay = new WaitForSeconds(1f);
         startgateCooldownDelay = new WaitForSeconds(1f);
+        baseCooldown = 2f;
     }
 
     public virtual void SpawnSkillObjects()

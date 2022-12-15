@@ -48,4 +48,26 @@ public class SPlayer : MonoBehaviourCore
     {
         movementComponent.enabled = true;
     }
+    //=========================DASH================
+    private bool canDash = true;
+    private bool isDashing;
+    private float dashingPower = 40f;
+    private float dashingTime = 0.1f;
+    private float dashingCooldown = 1f;
+
+    public IEnumerator Dash(Vector3 dir)
+    {
+        canDash = false;
+        isDashing = true;
+        playerRigid.velocity = dir * dashingPower;
+        yield return new WaitForSeconds(dashingTime);
+        isDashing = false;
+        playerRigid.velocity = Vector3.zero;
+        yield return new WaitForSeconds(dashingCooldown);
+        canDash = true;
+
+    }
+    public void GoDash(Vector3 dir){
+        StartCoroutine(Dash(dir));
+    }
 }

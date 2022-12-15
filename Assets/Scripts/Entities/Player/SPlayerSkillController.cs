@@ -8,9 +8,18 @@ using UnityEngine.UI;
 public class SPlayerSkillController : MonoBehaviour
 {
     public SSkillJoytickPanel skillPanel;
-    private Vector3 joyStickDir;
-    private float rotateAngle;
-    public bool isRotate;
+    private Vector3 dirFirstSkill;
+    private Vector3 dirSeconndSkill;
+    private Vector3 dirThirdSkill;
+    private float rotateAngleFirstSkill;
+    private float rotateAngleSecondSkill;
+    private float rotateAngleThirdSkill;
+    public bool isRotateFirstSkill;
+    public bool isRotateSecondSkill;
+    public bool isRotateThirdSkill;
+    public IEnumerator firstSkillCo;
+    public IEnumerator secondSkillCo;
+    public IEnumerator thirdSkillCo;
     public GameObject spin;
     public SDirectionLine line;
     public SkillController skillController;
@@ -31,27 +40,57 @@ public class SPlayerSkillController : MonoBehaviour
 
     void Update()
     {
-        joyStickDir = skillPanel.joystickControllers[0].joystickSkill.Direction;
-        isRotate = RotateDir(joyStickDir);
-        if (joyStickDir != Vector3.zero)
+        dirFirstSkill = skillPanel.joystickControllers[0].joystickSkill.Direction;
+        isRotateFirstSkill = RotateDirFirstSkill(dirFirstSkill);
+
+        dirSeconndSkill = skillPanel.joystickControllers[1].joystickSkill.Direction;
+        isRotateSecondSkill = RotateDirSecondSkill(dirSeconndSkill);
+
+        dirThirdSkill = skillPanel.joystickControllers[2].joystickSkill.Direction;
+        isRotateThirdSkill = RotateDirThirdSkill(dirThirdSkill);
+
+        line.spriteLine[0].SetActive(dirFirstSkill != Vector3.zero);
+        line.spriteLine[1].SetActive(dirSeconndSkill != Vector3.zero);
+        line.spriteLine[2].SetActive(dirThirdSkill != Vector3.zero);
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            line.spriteLine[0].SetActive(true);
+            ResetCoolDown(firstSkillCo, skillPanel.joystickControllers[0].OnResetCoolDown);
         }
-        else
-        {
-            line.spriteLine[0].SetActive(false);
-        }
+
     }
 
-    private bool RotateDir(Vector2 dir)
+    private bool RotateDirFirstSkill(Vector2 dir)
+    {
+        Vector3 newDir = MiniumVector(dir);
+        if (dir.sqrMagnitude < 0.1f) return false;
+
+        rotateAngleFirstSkill = Mathf.Atan2(newDir.x, newDir.y) * Mathf.Rad2Deg;
+        if (rotateAngleFirstSkill < 0) rotateAngleFirstSkill += 360;
+        line.transform.eulerAngles = Vector3.forward * -rotateAngleFirstSkill;
+        return true;
+    }
+
+    private bool RotateDirSecondSkill(Vector2 dir)
     {
         if (dir.sqrMagnitude < 0.1f) return false;
 
-        rotateAngle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
-        if (rotateAngle < 0) rotateAngle += 360;
-        line.transform.eulerAngles = Vector3.forward * -rotateAngle;
+        rotateAngleSecondSkill = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
+        if (rotateAngleSecondSkill < 0) rotateAngleSecondSkill += 360;
+        line.transform.eulerAngles = Vector3.forward * -rotateAngleSecondSkill;
         return true;
     }
+
+    private bool RotateDirThirdSkill(Vector2 dir)
+    {
+        if (dir.sqrMagnitude < 0.1f) return false;
+
+        rotateAngleThirdSkill = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
+        if (rotateAngleThirdSkill < 0) rotateAngleThirdSkill += 360;
+        line.transform.eulerAngles = Vector3.forward * -rotateAngleThirdSkill;
+        return true;
+    }
+
     public void SpawnBullet()
     {
         // GameObject bullet = Instantiate(spin, transform.position, Quaternion.identity);
@@ -61,20 +100,97 @@ public class SPlayerSkillController : MonoBehaviour
     {
         SGameInstance.Instance.gameEvent.OnPlayerUseSkill?.Invoke();
         skillController.UseFirstSkill(line.gameObject.transform.position, line.gameObject.transform.rotation);
+        firstSkillCo = CoutCoolDown(skillPanel.joystickControllers[0].OnCoolDown, skillController.GetFirstSkillCoolDown());
+        StartCoroutine(firstSkillCo);
     }
     public void UseSecondSkill()
     {
         SGameInstance.Instance.gameEvent.OnPlayerUseSkill?.Invoke();
-        //skillController.UseFirstSkill(line.gameObject.transform.position, line.gameObject.transform.rotation);
+        skillController.UseSecondSkill(MiniumVector(dirSeconndSkill), line.gameObject.transform.rotation);
+        secondSkillCo = (CoutCoolDown(skillPanel.joystickControllers[1].OnCoolDown, skillController.GetSecondSkillCoolDown()));
+        StartCoroutine(secondSkillCo);
     }
     public void UseThirdSkill()
     {
         SGameInstance.Instance.gameEvent.OnPlayerUseSkill?.Invoke();
-        //skillController.UseFirstSkill(line.gameObject.transform.position, line.gameObject.transform.rotation);
+        //skillController.UseThirdSkill(line.gameObject.transform.position, line.gameObject.transform.rotation);
     }
     public void LoadFirstSkill()
     {
         skillPanel.joystickControllers[0].imageSkill.texture = skillController.skills[0].iconSkill;
     }
 
+    public Vector3 ConvertVector(Vector3 dir)
+    {
+        float directionX = 0;
+        float directionY = 0;
+        if (dir.x == 0 && dir.y != 0)
+        {
+            directionY = dir.y / Mathf.Abs(dir.y);
+            return new Vector3(directionX, directionY, 0);
+        }
+        if (dir.y == 0 && dir.x != 0)
+        {
+            directionX = dir.x / Mathf.Abs(dir.x);
+            return new Vector3(directionX, directionY, 0);
+        }
+        if (dir.x != 0 && dir.y != 0)
+        {
+            if (dir.x < 0 && dir.y < 0)
+            {
+                directionY = ((dir.y / dir.x) * -1);
+                directionX = -1;
+            }
+            if (dir.x > 0 && dir.y > 0)
+            {
+                directionY = (dir.y / dir.x);
+                directionX = 1;
+            }
+            if (dir.x < 0 && dir.y > 0)
+            {
+                directionY = ((dir.y / dir.x) * -1);
+                directionX = -1;
+            }
+            if (dir.x > 0 && dir.y < 0)
+            {
+                directionY = (dir.y / dir.x);
+                directionX = 1;
+            }
+            return new Vector3(directionX, directionY, 0);
+        }
+        return Vector3.zero;
+    }
+    public Vector3 MiniumVector(Vector3 dir)
+    {
+        Vector3 vectorEquation = ConvertVector(dir);
+        float equation = dir.y / dir.x;
+        Vector3 goToDirection = new Vector3(0, 0, 0);
+        if (vectorEquation.x >= 1)
+        {
+            goToDirection = new Vector3(0.5f, 0.5f * equation);
+        }
+        if (vectorEquation.x <= -1)
+        {
+            goToDirection = new Vector3(-0.5f, -0.5f * equation);
+        }
+        if (vectorEquation.y >= 1)
+        {
+            goToDirection = new Vector3(0.5f / equation, 0.5f);
+        }
+        if (vectorEquation.y <= -1)
+        {
+            goToDirection = new Vector3(-0.5f / equation, -0.5f);
+        }
+        return goToDirection;
+    }
+    IEnumerator CoutCoolDown(UnityAction<float> actionCoolDown, float cooldown)
+    {
+        actionCoolDown?.Invoke(cooldown);
+        yield return new WaitForSeconds(0f);
+    }
+    void ResetCoolDown(IEnumerator skillCo, UnityAction actionCoolDown)
+    {
+        StopCoroutine(skillCo);
+        actionCoolDown?.Invoke();
+    }
 }
